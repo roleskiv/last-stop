@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="130" viewBox="0 0 220 130">
+  <defs>
+    <linearGradient id="cap" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0E1117"/><stop offset=".35" stop-color="#2A3044"/><stop offset="1" stop-color="#0E1117"/></linearGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9AE"/><stop offset=".5" stop-color="#B78B3E"/><stop offset="1" stop-color="#4A3212"/></linearGradient>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <path d="M40 92 C36 52 60 18 112 16 C164 18 186 52 182 92 Z" fill="url(#cap)" stroke="#05070A" stroke-width="3"/>
+  <path d="M60 30 C80 22 100 20 116 22" stroke="#5EF2D6" stroke-width="2.5" fill="none" opacity=".6"/>
+  <rect x="38" y="78" width="146" height="18" rx="3" fill="#141B2D" stroke="#05070A" stroke-width="2"/>
+  <rect x="38" y="80" width="146" height="5" fill="url(#brass)"/>
+  <path d="M20 104 C60 88 160 88 206 100 C190 116 40 120 20 104 Z" fill="#05070A" stroke="#000" stroke-width="2"/>
+  <path d="M30 104 C70 96 150 96 196 102" stroke="#2A3044" stroke-width="3" fill="none"/>
+  <path d="M96 42 h30 l4 14 -19 12 -19 -12 z" fill="url(#brass)" stroke="#3D2A0E" stroke-width="2"/>
+  <text x="111" y="58" font-family="Arial Black, Arial, sans-serif" font-size="12" fill="#141B2D" text-anchor="middle">13</text>
+  <circle cx="111" cy="38" r="3" fill="#5EF2D6" filter="url(#glow)"/>
+</svg>

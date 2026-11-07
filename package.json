@@ -1,15 +1,22 @@
 {
   "name": "last-stop",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "LAST STOP: Midnight Line, a haunted-subway cluster-pays slot game (fictional demo credits only)",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "tsc -p . && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "simulate": "tsx scripts/simulate.ts",
+    "audio": "tsx scripts/generate-audio.ts",
+    "typecheck": "tsc -p ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "dependencies": {
+    "@fontsource/bebas-neue": "^5.3.0",
+    "@fontsource/cinzel-decorative": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
     "gsap": "^3.15.1",
     "howler": "^2.2.4",
     "pixi.js": "^8.22.0",
@@ -26,5 +33,7 @@
     "typescript": "^7.0.2",
     "vite": "^8.3.6",
     "vitest": "^5.1.0"
-  }
+  },
+  "private": true,
+  "type": "module"
 }
