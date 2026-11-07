@@ -1,4 +1,4 @@
-import { Assets, Texture } from 'pixi.js';
+import { CanvasSource, Texture } from 'pixi.js';
 import { characterAssets, symbolAssets } from '../assets/assetManifest';
 import { ALL_SYMBOLS, type SymbolId } from '../config/symbols';
 
@@ -102,6 +102,25 @@ function makeFx(): FxTextures {
   return { glow, softGlow, spark, ember, ring, fog, beam, hole, vignette };
 }
 
+/**
+ * Rasterise an SVG (URL or data: URI) through an <img> element instead of Pixi's fetch-based loader.
+ * Strict hosts (such as sandboxed previews) often block fetch() of data: URIs but still allow images.
+ */
+function loadSvgTexture(src: string, resolution: number): Promise<Texture> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const w = img.naturalWidth || 256;
+      const h = img.naturalHeight || 256;
+      const [c, ctx] = canvas(Math.round(w * resolution), Math.round(h * resolution));
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      resolve(new Texture({ source: new CanvasSource({ resource: c, resolution }) }));
+    };
+    img.onerror = () => reject(new Error(`Failed to load image ${src.slice(0, 64)}`));
+    img.src = src;
+  });
+}
+
 export async function loadGameTextures(onProgress?: (p: number) => void): Promise<GameTextures> {
   const symbolUrls = ALL_SYMBOLS.map((s) => symbolAssets[s]);
   const charKeys = Object.keys(characterAssets) as (keyof typeof characterAssets)[];
@@ -110,7 +129,7 @@ export async function loadGameTextures(onProgress?: (p: number) => void): Promis
   let done = 0;
   const loaded = await Promise.all(
     all.map(async (src) => {
-      const t = await Assets.load<Texture>({ src, data: { resolution: 2 } });
+      const t = await loadSvgTexture(src, 2);
       done++;
       onProgress?.(done / all.length);
       return t;

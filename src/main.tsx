@@ -1,3 +1,5 @@
+// Pixi normally compiles shaders with new Function; this keeps it working under strict CSPs (no unsafe-eval).
+import 'pixi.js/unsafe-eval';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@fontsource/bebas-neue/400.css';
