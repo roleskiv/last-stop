@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="120" viewBox="0 0 220 120">
+  <!-- pivot (shoulder) at 18,30. Arm extends right, open palm presenting -->
+  <defs>
+    <linearGradient id="sleeve" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#252B3B"/><stop offset="1" stop-color="#0E1117"/></linearGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFEBB2"/><stop offset=".5" stop-color="#B78B3E"/><stop offset="1" stop-color="#4A3212"/></linearGradient>
+    <radialGradient id="glove" r=".6"><stop offset="0" stop-color="#E9FFF9"/><stop offset="1" stop-color="#5EF2D6"/></radialGradient>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <path d="M8 18 C20 8 40 12 50 24 L130 44 C142 48 140 68 128 68 L44 58 C24 58 6 44 8 18 Z" fill="url(#sleeve)" stroke="#05070A" stroke-width="3"/>
+  <path d="M124 42 l8 2 -2 26 -8 -2 z" fill="url(#brass)"/>
+  <g filter="url(#glow)">
+    <path d="M132 46 C150 36 170 34 186 38 C196 40 196 48 186 48 L170 48 C182 48 200 50 206 56 C210 62 202 66 194 62 C200 66 202 74 194 76 C188 78 176 72 170 70 C176 76 174 84 166 82 C156 80 140 74 132 68 Z" fill="url(#glove)" stroke="#2E5A5A" stroke-width="2"/>
+    <path d="M150 40 C156 28 164 26 168 32 C170 36 164 40 160 44" fill="url(#glove)" stroke="#2E5A5A" stroke-width="2"/>
+  </g>
+</svg>

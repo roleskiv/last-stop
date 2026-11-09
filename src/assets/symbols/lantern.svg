@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6B4A1C"/><stop offset=".35" stop-color="#E8C77A"/><stop offset=".6" stop-color="#B78B3E"/><stop offset="1" stop-color="#4A3212"/></linearGradient>
+    <radialGradient id="flame" cx="50%" cy="60%" r="50%"><stop offset="0" stop-color="#F4FFF8"/><stop offset=".35" stop-color="#8DFFB5"/><stop offset="1" stop-color="#2FAE76" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glass" r=".6"><stop offset="0" stop-color="#8DFFB5" stop-opacity=".55"/><stop offset="1" stop-color="#1E3A33" stop-opacity=".85"/></radialGradient>
+    <radialGradient id="aura" r=".5"><stop offset="0" stop-color="#8DFFB5" stop-opacity=".55"/><stop offset="1" stop-color="#8DFFB5" stop-opacity="0"/></radialGradient>
+    <filter id="sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000" flood-opacity=".6"/></filter>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <circle cx="100" cy="110" r="90" fill="url(#aura)"/>
+  <g filter="url(#sh)">
+    <path d="M86 30 a14 14 0 0 1 28 0" fill="none" stroke="url(#brass)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M74 44 h52 l8 14 h-68 z" fill="url(#brass)" stroke="#3D2A0E" stroke-width="2"/>
+    <rect x="70" y="58" width="60" height="80" rx="6" fill="url(#glass)" stroke="#3D2A0E" stroke-width="2"/>
+    <ellipse cx="100" cy="102" rx="20" ry="30" fill="url(#flame)" filter="url(#glow)"/>
+    <path d="M100 76 C112 92 112 104 100 120 C88 104 92 94 100 76 Z" fill="#E9FFF3" opacity=".9" filter="url(#glow)"/>
+    <circle cx="96" cy="104" r="2.5" fill="#141B2D"/><circle cx="104" cy="104" r="2.5" fill="#141B2D"/>
+    <rect x="64" y="56" width="8" height="84" rx="3" fill="url(#brass)" stroke="#3D2A0E" stroke-width="1.5"/>
+    <rect x="128" y="56" width="8" height="84" rx="3" fill="url(#brass)" stroke="#3D2A0E" stroke-width="1.5"/>
+    <rect x="96" y="58" width="8" height="80" fill="url(#brass)" opacity=".55"/>
+    <path d="M60 138 h80 l-8 16 h-64 z" fill="url(#brass)" stroke="#3D2A0E" stroke-width="2"/>
+    <rect x="74" y="154" width="52" height="8" rx="3" fill="#4A3212"/>
+    <path d="M76 64 v66" stroke="#FFFFFF" stroke-width="3" opacity=".35" stroke-linecap="round"/>
+  </g>
+</svg>

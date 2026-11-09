@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="220" viewBox="0 0 200 220">
+  <defs>
+    <radialGradient id="face" cx="42%" cy="35%" r="75%"><stop offset="0" stop-color="#F3FFFB"/><stop offset=".55" stop-color="#C7FFF1"/><stop offset="1" stop-color="#6FA5A6"/></radialGradient>
+    <radialGradient id="aura" r=".5"><stop offset=".6" stop-color="#5EF2D6" stop-opacity=".35"/><stop offset="1" stop-color="#5EF2D6" stop-opacity="0"/></radialGradient>
+  </defs>
+  <ellipse cx="100" cy="120" rx="92" ry="104" fill="url(#aura)"/>
+  <!-- long narrow face with sharp cheekbones -->
+  <path d="M46 92 C42 60 66 38 100 38 C134 38 158 60 154 92 C152 120 146 136 136 156 C126 180 114 200 100 204 C86 200 74 180 64 156 C54 136 48 120 46 92 Z" fill="url(#face)" stroke="#2E5A5A" stroke-width="3"/>
+  <path d="M58 130 C66 140 72 146 78 148 M142 130 C134 140 128 146 122 148" stroke="#6FA5A6" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- eye sockets -->
+  <ellipse cx="78" cy="112" rx="17" ry="13" fill="#0E1117" transform="rotate(8 78 112)"/>
+  <ellipse cx="122" cy="112" rx="17" ry="13" fill="#0E1117" transform="rotate(-8 122 112)"/>
+  <!-- nose -->
+  <path d="M100 116 C98 128 96 136 92 142 C98 146 104 144 106 140" stroke="#4E8486" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- ears -->
+  <path d="M46 98 C34 92 32 116 48 122" fill="#AEE3DA" stroke="#2E5A5A" stroke-width="2.5"/>
+  <path d="M154 98 C166 92 168 116 152 122" fill="#AEE3DA" stroke="#2E5A5A" stroke-width="2.5"/>
+  <!-- chin tuft -->
+  <path d="M94 196 l6 14 6 -14" fill="#C7FFF1" stroke="#2E5A5A" stroke-width="2"/>
+</svg>
