@@ -1,0 +1,38 @@
+{
+  "name": "last-stop",
+  "version": "2.0.0",
+  "description": "LAST STOP: Midnight Line. A haunted-subway cluster-pays video slot with a server-authoritative game engine, reference RGS and verified math.",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p . && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p .",
+    "test": "vitest run",
+    "simulate": "tsx scripts/simulate.ts",
+    "tune": "tsx scripts/tune.ts",
+    "parsheet": "tsx scripts/parsheet.ts",
+    "server": "tsx src/server/main.ts",
+    "art": "node scripts/build-art.mjs",
+    "audio": "python3 scripts/build-audio.py"
+  },
+  "dependencies": {
+    "@fontsource/bebas-neue": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "pixi.js": "^8.22.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
+  }
+}
