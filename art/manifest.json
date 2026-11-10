@@ -1,0 +1,178 @@
+{
+ "symbols/token.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/ticket.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/lantern.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/key.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/watch.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/pigeon.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/passenger.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/ratking.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/wild.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/scatter.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/sign.png": {
+  "w": 256,
+  "h": 256
+ },
+ "symbols/punch.png": {
+  "w": 256,
+  "h": 256
+ },
+ "graves/tail.png": {
+  "w": 360,
+  "h": 420,
+  "x": 90,
+  "y": 540
+ },
+ "graves/body.png": {
+  "w": 280,
+  "h": 350,
+  "x": 180,
+  "y": 270
+ },
+ "graves/armR.png": {
+  "w": 260,
+  "h": 200,
+  "x": 380,
+  "y": 300
+ },
+ "graves/armL.png": {
+  "w": 240,
+  "h": 320,
+  "x": 40,
+  "y": 220
+ },
+ "graves/head.png": {
+  "w": 180,
+  "h": 240,
+  "x": 230,
+  "y": 80
+ },
+ "graves/brows.png": {
+  "w": 140,
+  "h": 50,
+  "x": 250,
+  "y": 140
+ },
+ "graves/eyesClosed.png": {
+  "w": 128,
+  "h": 56,
+  "x": 256,
+  "y": 170
+ },
+ "graves/mouthSmirk.png": {
+  "w": 104,
+  "h": 60,
+  "x": 270,
+  "y": 224
+ },
+ "graves/mouthGrin.png": {
+  "w": 112,
+  "h": 70,
+  "x": 266,
+  "y": 224
+ },
+ "graves/mouthLaugh.png": {
+  "w": 106,
+  "h": 76,
+  "x": 268,
+  "y": 230
+ },
+ "graves/mouthOoh.png": {
+  "w": 52,
+  "h": 56,
+  "x": 296,
+  "y": 234
+ },
+ "graves/hat.png": {
+  "w": 300,
+  "h": 180,
+  "x": 190,
+  "y": 0
+ },
+ "graves/preview.png": {
+  "w": 640,
+  "h": 960
+ },
+ "bg_landscape.jpg": {
+  "w": 2400,
+  "h": 1350
+ },
+ "bg_portrait.jpg": {
+  "w": 1350,
+  "h": 2400
+ },
+ "frame_back.png": {
+  "w": 920,
+  "h": 782
+ },
+ "frame_front.png": {
+  "w": 920,
+  "h": 782
+ },
+ "logo.png": {
+  "w": 820,
+  "h": 250
+ },
+ "train.png": {
+  "w": 900,
+  "h": 900
+ },
+ "fx/glow.png": {
+  "w": 256,
+  "h": 256
+ },
+ "fx/spark.png": {
+  "w": 96,
+  "h": 96
+ },
+ "fx/smoke.png": {
+  "w": 256,
+  "h": 256
+ },
+ "fx/ring.png": {
+  "w": 256,
+  "h": 256
+ },
+ "fx/tile.png": {
+  "w": 138,
+  "h": 138
+ },
+ "fx/badge.png": {
+  "w": 72,
+  "h": 44
+ },
+ "board.png": {
+  "w": 400,
+  "h": 330
+ }
+}

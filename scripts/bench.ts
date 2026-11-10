@@ -1,0 +1,11 @@
+import { getMath } from '../src/math/config.ts';
+import { Engine } from '../src/math/engine.ts';
+import { SeededRng } from '../src/math/rng.ts';
+const e = new Engine(getMath());
+const r = new SeededRng('bench');
+let t = Date.now(), sum = 0;
+for (let i = 0; i < 1_000_000; i++) sum += e.simulate(r, 'spin').coins;
+console.log('spin/s', Math.round(1e6 / ((Date.now() - t) / 1000)), sum);
+t = Date.now();
+for (let i = 0; i < 20_000; i++) sum += e.simulate(r, 'buy').coins;
+console.log('buy/s', Math.round(2e4 / ((Date.now() - t) / 1000)));
