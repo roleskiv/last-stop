@@ -171,6 +171,25 @@ def sfx():
     coin = mix(0.7, (0, bell(note(96), 0.5), 0.7), (0.07, bell(note(100), 0.5), 0.6), (0.14, bell(note(103), 0.5), 0.5))
     save('coin', norm(reverb(coin, 0.7, 0.2), 0.8), bitrate='80k')
 
+    # Game-feel additions. Kept at the end so the sounds above stay byte-for-byte the same.
+    sl = mix(1.3, (0, sweep(140, 34, 0.5, 0.3) * env(int(SR * 0.5), 0.001, 0.22), 1.0),
+             (0, lowpass(noise(0.35), 900) * env(int(SR * 0.35), 0.001, 0.09), 0.7),
+             (0, clack(0.1, 700), 0.5), (0.02, bell(note(57), 1.0), 0.25), (0.02, bell(note(64), 1.0), 0.2))
+    save('slam', widen(norm(reverb(sl, 1.4, 0.3, 2500))), bitrate='96k')
+
+    ms = mix(0.7, (0, sweep(520, 150, 0.45, 0.6) * env(int(SR * 0.45), 0.01, 0.3), 0.6),
+             (0.02, pluck(note(58), 0.4, 0.8), 0.5), (0.2, pluck(note(53), 0.45, 0.8), 0.5),
+             (0, bandpass(noise(0.4), 300, 1800) * np.linspace(1, 0, int(SR * 0.4)) ** 2, 0.25))
+    save('miss', norm(reverb(ms, 0.7, 0.2), 0.6), bitrate='80k')
+
+    ws = bandpass(noise(0.32), 900, 7000) * np.sin(np.pi * t(0.32) / 0.32) ** 3
+    ws = mix(0.4, (0, ws, 0.8), (0, sweep(500, 2600, 0.3, 2) * env(int(SR * 0.3), 0.05, 0.25), 0.25))
+    save('whoosh', norm(fade(ws), 0.55), bitrate='64k')
+
+    # One short rising arpeggio step, pitched up by the client as a chain grows.
+    ch = mix(0.6, (0, pluck(note(76), 0.4, 1.3), 0.7), (0.05, pluck(note(83), 0.4, 1.3), 0.6), (0.05, bell(note(88), 0.45), 0.3))
+    save('chain', norm(reverb(ch, 0.6, 0.2), 0.7), bitrate='80k')
+
 # ---------------- music ----------------
 def music(name, bpm, prog, drive):
     beat = 60 / bpm

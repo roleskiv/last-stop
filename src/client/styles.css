@@ -246,3 +246,9 @@ svg { display: block; }
 .stat-grid b { font-size: 18px; font-variant-numeric: tabular-nums; }
 
 @media (prefers-reduced-motion: reduce) { .spin-ring, .replay-tag { animation: none; } .scrim, .dialog { animation: none; } }
+
+/* The win field flares once when a round's final win is booked. */
+.win-field { overflow: hidden; }
+.win-flare { position: absolute; inset: 0; pointer-events: none; border-radius: 18px; background: linear-gradient(100deg, transparent 30%, rgba(255, 233, 168, 0.55) 50%, transparent 70%); transform: translateX(-100%); animation: flare 0.7s ease-out 1; }
+@keyframes flare { to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) { .win-flare { display: none; } }

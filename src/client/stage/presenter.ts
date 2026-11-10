@@ -23,6 +23,7 @@ export class Presenter {
 
   constructor(stage: Stage) {
     this.stage = stage;
+    stage.grid.onKick = (amount) => stage.kick(amount);
   }
 
   async playRound(env: RoundEnvelope): Promise<void> {
@@ -38,7 +39,7 @@ export class Presenter {
 
     stage.grid.setTiles([], false);
     stage.setBoard(env.mode === 'buy' ? 'EXPRESS\nTICKET' : 'MIND\nTHE GAP', env.mode === 'buy' ? 'ALL ABOARD' : 'NEXT TRAIN: MIDNIGHT');
-    await this.playSpin(record.base, coin, celebrate);
+    await this.playSpin(record.base, coin, celebrate, game.coinsPerBet);
 
     if (record.free.length > 0) {
       const awarded = record.base.awarded;
@@ -59,10 +60,12 @@ export class Presenter {
       for (const spin of record.free) {
         played++;
         store.set({ bonus: { left: total - played, total, win: bonusCoins * coin } });
-        stage.setBoard(`SPIN ${played} / ${total}`, `BONUS WIN ${money(bonusCoins * coin)}`, 'MIDNIGHT TRAIN');
+        const last = played === total;
+        stage.setBoard(last ? 'LAST\nSPIN' : `SPIN ${played} / ${total}`, `BONUS WIN ${money(bonusCoins * coin)}`, 'MIDNIGHT TRAIN');
+        if (last && total > 1) { audio.play('tick', { rate: 0.7 }); stage.kick(5); }
         await stage.grid.dropOut();
         stage.grid.setTiles(spin.tilesStart, true);
-        await this.playSpin(spin, coin, true);
+        await this.playSpin(spin, coin, true, game.coinsPerBet);
         bonusCoins += spin.coins;
         store.set({ bonus: { left: total - played, total, win: bonusCoins * coin } });
         if (spin.awarded > 0) {
@@ -94,7 +97,7 @@ export class Presenter {
     stage.setBoard('MIND\nTHE GAP', 'NEXT TRAIN: MIDNIGHT');
   }
 
-  private async playSpin(spin: SpinRecord, coin: number, celebrate: boolean): Promise<void> {
+  private async playSpin(spin: SpinRecord, coin: number, celebrate: boolean, betCoins: number): Promise<void> {
     const { stage } = this;
     await stage.grid.dropIn(spin.grid, (on) => stage.graves.anticipate(on));
     let cascade = 0;
@@ -112,9 +115,11 @@ export class Presenter {
           break;
         case 'win': {
           if (celebrate && cascade === 0) void stage.graves.nod();
+          if (celebrate && cascade === 3) void stage.graves.cheer(600);
+          if (cascade >= 1) stage.setBoard(`CHAIN\nx${cascade + 1}`, cascade >= 3 ? 'KEEP IT ROLLING' : 'CASCADE', 'ARRIVALS');
           const target = this.shownWin + step.coins * coin;
-          void this.countWin(target, 500);
-          await stage.grid.win(step, coin, cascade, celebrate);
+          void this.countWin(target, 650);
+          await stage.grid.win(step, coin, cascade, celebrate, betCoins);
           cascade++;
           break;
         }

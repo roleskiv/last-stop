@@ -23,7 +23,7 @@ localisation of the text baked into the logo and signs.
 
 ## Audio
 
-All 19 sound effects and both music loops are synthesised by `scripts/build-audio.py`
+All 23 sound effects and both music loops are synthesised by `scripts/build-audio.py`
 (numpy oscillators, noise, filters and a convolution reverb) and encoded to MP3 with ffmpeg
 (`npm run audio`). Nothing is sampled. The music loops are written so the reverb tail folds back
 onto the start and loops without a gap.

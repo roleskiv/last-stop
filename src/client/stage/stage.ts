@@ -241,7 +241,7 @@ export class Stage {
     }
   }
 
-  kick(amount: number): void { this.shake = Math.max(this.shake, amount * this.layout.scale); }
+  kick(amount: number): void { if (this.calm) return; this.shake = Math.max(this.shake, amount * this.layout.scale); }
 
   /** Write on the arrivals board. */
   setBoard(main: string, sub = '', title = 'ARRIVALS'): void {
@@ -361,6 +361,8 @@ export class Stage {
 
   undim(): Promise<void> { return anim.to(this.dim, { alpha: 0 }, 300, ease.inQuad, { realtime: true }); }
 
+  /** Players who ask their device for reduced motion get no screen shake. */
+  private readonly calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   private tapWaiters: (() => void)[] = [];
   /** Called by the controller for any tap / key press on the stage. */
   tap(): void { const w = this.tapWaiters; this.tapWaiters = []; w.forEach((f) => f()); }
@@ -369,90 +371,181 @@ export class Stage {
   }
 
   /**
-   * Big win celebration with a count-up. `tiers` are the titles reached, in order.
-   * `format` turns the running amount into text.
+   * Big win sequence. The amount counts up one tier at a time: it slows as it nears the
+   * next title, the title slams in, the palette and the coin shower step up, and the count
+   * takes off again. One tap jumps to the total, a second tap closes it.
+   * `tiers` are the titles reached, in order; `format` turns the running amount into text.
    */
   async bigWin(tiers: { title: string; at: number }[], total: number, format: (v: number) => string, maxWin: boolean): Promise<void> {
     const { x, y } = this.frameCentre();
-    audio.duck(0.2, 6);
-    void anim.to(this.dim, { alpha: 0.6 }, 250, ease.outQuad, { realtime: true });
+    const PALETTE = [
+      { title: 0xffe9a8, halo: 0xf0b45e, rayA: 0x5ef2d6, rayB: 0xf0b45e },
+      { title: 0x8dffb5, halo: 0x5ef2d6, rayA: 0x8dffb5, rayB: 0xffe9a8 },
+      { title: 0xffc46b, halo: 0xff9d3c, rayA: 0xffe9a8, rayB: 0xff9d3c },
+      { title: 0xfff6d8, halo: 0xff6b5e, rayA: 0xffffff, rayB: 0xff6b5e },
+    ];
+    audio.duck(0.2, 4 + tiers.length * 2.5);
+    void anim.to(this.dim, { alpha: 0.66 }, 250, ease.outQuad, { realtime: true });
+
     const root = new Container();
     root.position.set(x, y);
     const rays = new Container();
-    for (let i = 0; i < 12; i++) {
-      const r = new Graphics().moveTo(0, 0).lineTo(-70, -900).lineTo(70, -900).closePath().fill({ color: i % 2 ? 0x5ef2d6 : 0xf0b45e, alpha: 0.16 });
-      r.rotation = (Math.PI * 2 * i) / 12;
+    const rayShapes: Graphics[] = [];
+    for (let i = 0; i < 14; i++) {
+      const r = new Graphics().moveTo(0, 0).lineTo(-64, -1100).lineTo(64, -1100).closePath().fill({ color: 0xffffff, alpha: 0.17 });
+      r.rotation = (Math.PI * 2 * i) / 14;
       r.blendMode = 'add';
       rays.addChild(r);
+      rayShapes.push(r);
     }
     const halo = this.glow(0xf0b45e, 0.55);
     halo.scale.set(6, 3.6);
     const title = new Text({ text: tiers[0].title, style: displayFont(150, 0xffe9a8, { letterSpacing: 8 }) });
     title.anchor.set(0.5);
-    title.y = -70;
-    const amount = new Text({ text: format(0), style: displayFont(120, 0xf2fffb, { letterSpacing: 4 }) });
+    title.y = -78;
+    const amount = new Text({ text: format(0), style: displayFont(124, 0xf2fffb, { letterSpacing: 4 }) });
     amount.anchor.set(0.5);
-    amount.y = 80;
-    root.addChild(rays, halo, title, amount);
+    amount.y = 84;
+    const hint = new Text({ text: 'TAP TO SKIP', style: { fontFamily: 'Bebas Neue', fontSize: 28, fill: 0x8fa0b8, letterSpacing: 6 } });
+    hint.anchor.set(0.5);
+    hint.y = 190;
+    hint.alpha = 0;
+    root.addChild(rays, halo, title, amount, hint);
     root.scale.set(0.3);
     root.alpha = 0;
     this.overlay.addChild(root);
-    const fitTitle = (): void => { title.scale.set(Math.min(1, (this.spec.w - 100) / (title.width / title.scale.x))); };
+
+    let tier = 0;
+    let done = false;
+    let titleBase = 1;
+    const paint = (): void => {
+      const p = PALETTE[Math.min(tier, PALETTE.length - 1)];
+      title.style.fill = p.title;
+      halo.tint = p.halo;
+      rayShapes.forEach((r, i) => { r.tint = i % 2 ? p.rayA : p.rayB; });
+    };
+    const fitTitle = (): void => {
+      title.scale.set(1);
+      titleBase = Math.min(1, (this.spec.w - 100) / title.width);
+      title.scale.set(titleBase);
+    };
+    paint();
     fitTitle();
 
-    let done = false;
-    const spin = anim.run(60000, () => { if (!done) rays.rotation += 0.006; }, { realtime: true });
-    void spin;
-    const shower = async (): Promise<void> => {
-      while (!done) {
+    void anim.run(120000, () => {
+      if (done) return;
+      rays.rotation += 0.005 + tier * 0.003;
+      halo.alpha = 0.5 + Math.sin(anim.clock * 5) * 0.08;
+      amount.rotation = Math.sin(anim.clock * 22) * 0.004 * (1 + tier);
+    }, { realtime: true });
+
+    const coin = (fromBelow: boolean): void => {
+      if (fromBelow) {
+        this.showers.burst(x + (Math.random() - 0.5) * 240, this.spec.h + 40, {
+          texture: symbolTex(0), count: 1, additive: false, speed: [1250, 1900], angle: [-Math.PI * 0.62, -Math.PI * 0.38],
+          gravity: 1900, drag: 0, life: [1.7, 2.3], scale: [0.2, 0.36], endScale: 1, spin: 8,
+        });
+      } else {
         this.showers.burst(Math.random() * this.spec.w, -60, {
           texture: symbolTex(0), count: 1, additive: false, speed: [200, 520], angle: [Math.PI * 0.4, Math.PI * 0.6],
           gravity: 900, drag: 0, life: [1.8, 2.6], scale: [0.16, 0.34], endScale: 1, spin: 6,
         });
-        this.showers.burst(Math.random() * this.spec.w, Math.random() * this.spec.h, { texture: tex('fx/spark.png'), count: 1, tint: [0xffe9a8, 0x5ef2d6], speed: [10, 60], scale: [0.2, 0.6], life: [0.4, 0.9], spin: 4 });
-        await anim.wait(45, true);
       }
     };
-    void shower();
-    void this.graves.cheer(2600);
+    void (async () => {
+      while (!done) {
+        coin(false);
+        if (tier >= 2) coin(false);
+        this.showers.burst(Math.random() * this.spec.w, Math.random() * this.spec.h, { texture: tex('fx/spark.png'), count: 1, tint: [0xffe9a8, 0x5ef2d6], speed: [10, 60], scale: [0.2, 0.6], life: [0.4, 0.9], spin: 4 });
+        await anim.wait(Math.max(16, 52 - tier * 12), true);
+      }
+    })();
+
+    /** A title lands: shockwave, fountain of coins, shake, and the palette steps up. */
+    const slam = (first: boolean): void => {
+      paint();
+      fitTitle();
+      title.scale.set(titleBase * 2.6);
+      title.alpha = 0;
+      void anim.to(title, { alpha: 1 }, 90, ease.outQuad, { realtime: true });
+      void anim.to(title.scale, { x: titleBase, y: titleBase }, 300, ease.inCubic, { realtime: true }).then(() => {
+        audio.play('slam', { rate: 1 - tier * 0.05 });
+        this.kick(18 + tier * 8);
+        const wave = new Sprite(tex('fx/ring.png'));
+        wave.anchor.set(0.5);
+        wave.blendMode = 'add';
+        wave.tint = PALETTE[Math.min(tier, PALETTE.length - 1)].halo;
+        wave.position.set(0, title.y);
+        wave.scale.set(1);
+        root.addChildAt(wave, 2);
+        void Promise.all([
+          anim.to(wave.scale, { x: 16, y: 9 }, 600, ease.outCubic, { realtime: true }),
+          anim.to(wave, { alpha: 0 }, 600, ease.inQuad, { realtime: true }),
+        ]).then(() => { if (!wave.destroyed) wave.destroy(); });
+        for (let i = 0; i < 14 + tier * 8; i++) coin(true);
+        this.grid.flash([0xffe9a8, 0x5ef2d6]);
+        void anim.run(260, (k) => { title.scale.set(titleBase * (1 + Math.sin(k * Math.PI) * 0.08)); }, { realtime: true });
+      });
+      if (!first) audio.play('bigwin', { rate: 1 + tier * 0.12 });
+      void this.graves.cheer(1800);
+    };
+
     audio.play('bigwin');
-    const stopTick = audio.loop('tick', 0.5);
     await Promise.all([
       anim.to(root, { alpha: 1 }, 200, ease.outQuad, { realtime: true }),
-      anim.to(root.scale, { x: 1, y: 1 }, 500, ease.outElastic, { realtime: true }),
+      anim.to(root.scale, { x: 1, y: 1 }, 420, ease.outBack, { realtime: true }),
     ]);
+    slam(true);
+    void anim.to(hint, { alpha: 0.8 }, 400, ease.outQuad, { realtime: true, delay: 900 });
 
     let skipped = false;
-    void this.nextTap(500).then(() => { skipped = true; });
-    let tier = 0;
-    const countMs = Math.min(9000, 2600 + tiers.length * 1700);
-    await anim.run(countMs, (k) => {
-      const v = skipped ? total : total * ease.outQuad(k);
-      amount.text = format(v);
-      while (tier + 1 < tiers.length && v >= tiers[tier + 1].at) {
-        tier++;
+    const skip = this.nextTap(500).then(() => { skipped = true; });
+    const stopTick = audio.loop('tick', 0.5);
+    let shown = 0;
+    for (let i = 0; i < tiers.length && !skipped; i++) {
+      const from = shown;
+      const to = i + 1 < tiers.length ? tiers[i + 1].at : total;
+      const last = i + 1 === tiers.length;
+      // Each leg eases out, so the count crawls just before the next title.
+      const ms = last ? 2400 : 1900;
+      await Promise.race([skip, anim.run(ms, (k) => {
+        if (skipped) return;
+        shown = from + (to - from) * (last ? ease.outCubic(k) : ease.inOutQuad(k));
+        amount.text = format(shown);
+        const s = 1 + i * 0.07 + Math.sin(k * Math.PI) * 0.04;
+        amount.scale.set(s);
+      }, { realtime: true })]);
+      if (skipped) break;
+      if (!last) {
+        // Hold on the threshold for a beat, then the next title hits.
+        audio.play('tension', { volume: 0.5, rate: 1.6 });
+        await Promise.race([skip, anim.run(380, (k) => { amount.scale.set(1 + i * 0.07 + Math.sin(k * Math.PI * 6) * 0.03); }, { realtime: true })]);
+        if (skipped) break;
+        tier = i + 1;
         title.text = tiers[tier].title;
-        title.scale.set(1);
-        fitTitle();
-        const s = title.scale.x;
-        title.scale.set(s * 1.6);
-        void anim.to(title.scale, { x: s, y: s }, 420, ease.outBack, { realtime: true });
-        audio.play('bigwin', { rate: 1 + tier * 0.12 });
-        this.kick(16);
-        this.grid.flash([0xffe9a8, 0x5ef2d6]);
+        slam(false);
+        await anim.wait(420, true);
       }
-    }, { realtime: true }).then(() => undefined);
-    // A tap during the count jumps to the end.
-    amount.text = format(total);
-    if (maxWin) { title.text = 'MAX WIN'; fitTitle(); }
+    }
     stopTick();
+
+    // Land on the total (also where a skip arrives).
+    if (tier !== tiers.length - 1) { tier = tiers.length - 1; title.text = tiers[tier].title; slam(false); }
+    if (maxWin) { title.text = 'MAX WIN'; paint(); fitTitle(); }
+    amount.text = format(total);
+    hint.text = 'TAP TO CONTINUE';
     audio.play('coin');
-    await anim.to(amount.scale, { x: 1.2, y: 1.2 }, 140, ease.outQuad, { realtime: true });
-    await anim.to(amount.scale, { x: 1, y: 1 }, 300, ease.outBack, { realtime: true });
-    await Promise.race([anim.wait(skipped ? 900 : 1900, true), this.nextTap(400)]);
+    audio.play('chain', { rate: 1.2, volume: 0.8 });
+    this.kick(12);
+    const rest = 1 + (tiers.length - 1) * 0.07;
+    amount.style.fill = 0xffe9a8;
+    amount.scale.set(rest * 1.45);
+    await anim.to(amount.scale, { x: rest, y: rest }, 420, ease.outBack, { realtime: true });
+    await Promise.race([anim.wait(skipped ? 1400 : 2400, true), this.nextTap(400)]);
     done = true;
     await Promise.all([
       anim.to(root, { alpha: 0 }, 300, ease.inQuad, { realtime: true }),
+      anim.to(root.scale, { x: 1.15, y: 1.15 }, 300, ease.inQuad, { realtime: true }),
       anim.to(this.dim, { alpha: 0 }, 300, ease.inQuad, { realtime: true }),
     ]);
     root.destroy({ children: true });

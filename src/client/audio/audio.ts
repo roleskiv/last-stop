@@ -2,11 +2,11 @@ import { store } from '../core/store.ts';
 
 export type Sfx =
   | 'click' | 'spin' | 'land' | 'scatter' | 'win' | 'pop' | 'sign' | 'tile' | 'punch' | 'wild'
-  | 'anticipation' | 'horn' | 'train' | 'bonusStart' | 'bonusEnd' | 'bigwin' | 'tick' | 'coin' | 'tension';
+  | 'anticipation' | 'horn' | 'train' | 'bonusStart' | 'bonusEnd' | 'bigwin' | 'tick' | 'coin' | 'tension' | 'slam' | 'miss' | 'whoosh' | 'chain';
 export type Music = 'base' | 'bonus';
 
 const SFX: Sfx[] = ['click', 'spin', 'land', 'scatter', 'win', 'pop', 'sign', 'tile', 'punch', 'wild',
-  'anticipation', 'horn', 'train', 'bonusStart', 'bonusEnd', 'bigwin', 'tick', 'coin', 'tension'];
+  'anticipation', 'horn', 'train', 'bonusStart', 'bonusEnd', 'bigwin', 'tick', 'coin', 'tension', 'slam', 'miss', 'whoosh', 'chain'];
 
 /**
  * Web Audio playback: one-shots with pitch and volume control, and two music loops that

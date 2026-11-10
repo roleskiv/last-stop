@@ -93,6 +93,7 @@ export function Hud(): ReactElement | null {
       <div className="win-field" aria-live="polite">
         <span className="label">WIN</span>
         <span className={`value ${win > 0 ? 'on' : ''}`}>{money(win)}</span>
+        {win > 0 && phase === 'idle' && <span key={win} className="win-flare" />}
       </div>
 
       <div className="bar">
