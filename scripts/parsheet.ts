@@ -65,7 +65,7 @@ if (have.length) {
 ± values are 95% confidence half-widths. The stratified estimate combines the exactly known bonus
 probability with the measured value of ordinary spins and of bonuses (see \`docs/MATH.md\`); the
 brute-force figure is the plain average of the same spins and is listed as an independent check.
-Volatility: **very high**.
+Volatility: **high** (standard deviation about 16 bets per spin).
 `;
   for (const id of have) {
     const d = r(id).distribution;

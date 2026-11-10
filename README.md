@@ -38,7 +38,7 @@ offline demo repeatable, `?rgs=<url>&token=<token>` plays against a game server.
 | Express Ticket | Optional bonus buy for 100x the bet |
 | Maximum win | 10,000x the bet |
 | RTP variants | 96.1%, 94.1%, 92.1% (design values; measured results in `docs/PAR_SHEET.md`) |
-| Volatility | Very high |
+| Volatility | High |
 
 ## How it is built
 
